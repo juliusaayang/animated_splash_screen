@@ -5,7 +5,7 @@ Check it out at [Pub.Dev](https://pub.dev/packages/animated_splash_screen)
 
 ### Assets image
 ![ezgif com-video-to-gif (1)](https://user-images.githubusercontent.com/22732544/83060360-b3e21000-a031-11ea-9666-834f08e43045.gif)
-
+[animated_splash_screen.dart](lib%2Fanimated_splash_screen.dart)
 ### Custom Widget
 ![ezgif com-video-to-gif (4)](https://user-images.githubusercontent.com/22732544/83060348-ad539880-a031-11ea-875b-7a5d055e7659.gif)
 

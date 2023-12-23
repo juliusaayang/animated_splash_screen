@@ -190,8 +190,7 @@ class AnimatedSplashScreen extends StatefulWidget {
   _AnimatedSplashScreenState createState() => _AnimatedSplashScreenState();
 }
 
-class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
-    with SingleTickerProviderStateMixin {
+class _AnimatedSplashScreenState extends State<AnimatedSplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   static late BuildContext _context;
   late Animation _animation;
@@ -202,9 +201,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
   void initState() {
     super.initState();
 
-    _animationController = new AnimationController(
-        duration: w.animationDuration ?? Duration(milliseconds: 800),
-        vsync: this);
+    _animationController = new AnimationController(duration: w.animationDuration ?? Duration(milliseconds: 800), vsync: this);
 
     Animatable animation = w.customAnimation ??
         () {
@@ -216,17 +213,14 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
               );
 
             case SplashTransition.decoratedBoxTransition:
-              return DecorationTween(
-                  end: BoxDecoration(color: Colors.black87),
-                  begin: BoxDecoration(color: Colors.redAccent));
+              return DecorationTween(end: BoxDecoration(color: Colors.black87), begin: BoxDecoration(color: Colors.redAccent));
 
             default:
               return Tween(begin: 0.0, end: 1.0);
           }
         }() as Animatable<dynamic>;
 
-    _animation = animation
-        .animate(CurvedAnimation(parent: _animationController, curve: w.curve));
+    _animation = animation.animate(CurvedAnimation(parent: _animationController, curve: w.curve));
     _animationController.forward().then((value) => doTransition());
   }
 
@@ -245,16 +239,22 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
   }
 
   navigator(screen) {
-    Future.delayed(Duration(milliseconds: w.duration < 100 ? 100 : w.duration))
-        .then((_) {
+    Future.delayed(Duration(milliseconds: w.duration < 100 ? 100 : w.duration)).then((_) {
       try {
         if (screen is String) {
-          Navigator.of(_context).pushReplacementNamed(screen);
+          Navigator.of(_context).pushNamedAndRemoveUntil(
+            screen,
+            (route) => false,
+          );
         } else {
-          Navigator.of(_context).pushReplacement(PageTransition(
+          Navigator.of(_context).pushAndRemoveUntil(
+            PageTransition(
               type: w.transitionType,
               child: screen,
-              alignment: Alignment.topCenter));
+              alignment: Alignment.topCenter,
+            ),
+            (route) => false,
+          );
         }
       } catch (msg) {
         print('AnimatedSplashScreen -> '
@@ -266,11 +266,9 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
 
   /// Return icon of splash screen
   Widget getSplash() {
-    final size =
-        w.splashIconSize ?? MediaQuery.of(context).size.shortestSide * 0.2;
+    final size = w.splashIconSize ?? MediaQuery.of(context).size.shortestSide * 0.2;
 
-    Widget main({required Widget child}) =>
-        w.centered ? Center(child: child) : child;
+    Widget main({required Widget child}) => w.centered ? Center(child: child) : child;
 
     return getTransition(
         child: main(
@@ -279,46 +277,36 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                 child: w.splash is String
                     ? <Widget>() {
                         if (w.splash.toString().contains('[n]'))
-                          return Image.network(
-                              w.splash.toString().replaceAll('[n]', ''));
+                          return Image.network(w.splash.toString().replaceAll('[n]', ''));
                         else
                           return Image.asset(w.splash);
                       }()
-                    : (w.splash is IconData
-                        ? Icon(w.splash, size: size)
-                        : w.splash))));
+                    : (w.splash is IconData ? Icon(w.splash, size: size) : w.splash))));
   }
 
   /// return transtion
   Widget getTransition({required Widget child}) {
     switch (w.splashTransition) {
       case SplashTransition.slideTransition:
-        return SlideTransition(
-            position: (_animation as Animation<Offset>), child: child);
+        return SlideTransition(position: (_animation as Animation<Offset>), child: child);
 
       case SplashTransition.scaleTransition:
-        return ScaleTransition(
-            scale: (_animation as Animation<double>), child: child);
+        return ScaleTransition(scale: (_animation as Animation<double>), child: child);
 
       case SplashTransition.rotationTransition:
-        return RotationTransition(
-            turns: (_animation as Animation<double>), child: child);
+        return RotationTransition(turns: (_animation as Animation<double>), child: child);
 
       case SplashTransition.sizeTransition:
-        return SizeTransition(
-            sizeFactor: (_animation as Animation<double>), child: child);
+        return SizeTransition(sizeFactor: (_animation as Animation<double>), child: child);
 
       case SplashTransition.fadeTransition:
-        return FadeTransition(
-            opacity: (_animation as Animation<double>), child: child);
+        return FadeTransition(opacity: (_animation as Animation<double>), child: child);
 
       case SplashTransition.decoratedBoxTransition:
-        return DecoratedBoxTransition(
-            decoration: (_animation as Animation<Decoration>), child: child);
+        return DecoratedBoxTransition(decoration: (_animation as Animation<Decoration>), child: child);
 
       default:
-        return FadeTransition(
-            opacity: (_animation as Animation<double>), child: child);
+        return FadeTransition(opacity: (_animation as Animation<double>), child: child);
     }
   }
 
